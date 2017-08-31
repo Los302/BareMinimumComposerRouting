@@ -14,4 +14,9 @@
         "eftec/bladeone": "^1.9",
         "tebazil/db-seeder": "^0.0.0"
     }
+	"scripts": {
+		"post-create-project-cmd": [
+			"php -r \"copy('vendor/los302/App', './');\""
+		]
+	},
 }
