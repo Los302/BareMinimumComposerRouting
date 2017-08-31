@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteCond $1 !^public/
+RewriteRule ^([^/]*)(.*)$ /public/index.php?first=$1&second=$2

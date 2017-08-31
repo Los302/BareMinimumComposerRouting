@@ -1,0 +1,15 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Includes\\": "includes/",
+            "App\\": "App/",
+            "eftec\\": "vendor/eftec/"
+        }
+    },
+    "require": {
+        "doctrine/migrations": "^1.5",
+        "nikic/fast-route": "^1.2",
+        "eftec/bladeone": "^1.9",
+        "tebazil/db-seeder": "^0.0.0"
+    }
+}

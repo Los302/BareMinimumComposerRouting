@@ -1,0 +1,7 @@
+/vendor
+/.idea
+/includes/env.php
+/App/Views/Cache/*
+error_log
+migrations.yml
+composer.lock
