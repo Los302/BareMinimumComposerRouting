@@ -16,7 +16,7 @@
     },
 	"scripts": {
 		"post-create-project-cmd": [
-			"php -r \"copy('vendor/los302/App', './');\""
+			"php -r \"copy('vendor/los302/bareminimumcomposerrouting/App', './');\""
 		]
 	}
 }
