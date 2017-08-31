@@ -1,4 +1,6 @@
 {
+	"name": "los302/bareminimumcomposerrouting",
+	"description": "This is the bare minimum you need to build a website that uses composer and routing",
     "autoload": {
         "psr-4": {
             "Includes\\": "includes/",
