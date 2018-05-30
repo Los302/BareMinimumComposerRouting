@@ -230,7 +230,14 @@ class Validation
                     $this->SetError('requiredIf', 'The '.$this->SpacedKey.' field is required');
                     return false;
                 }
-                break;
+            break;
+            default:
+                if (empty($this->value) && (isset($_POST[$OtherFieldName]) && $_POST[$OtherFieldName] == $rule))
+                {
+                    $this->SetError('requiredIf', 'The '.$this->SpacedKey.' field is required');
+                    return false;
+                }
+            break;
         }
         return true;
     }

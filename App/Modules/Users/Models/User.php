@@ -1,7 +1,6 @@
 <?php namespace App\Modules\Users\Models;
 
 use App\Models\Model;
-use Includes\Upload;
 
 class User extends Model
 {
@@ -26,7 +25,7 @@ class User extends Model
         'first_name' => 'required',
         'last_name' => 'required',
         'email' => 'required|email',
-        'username' => 'required|unique:User,Check4DuplicateUN',
+        'username' => 'required|unique:App\Modules\Users\Models\User,Check4DuplicateUN',
         'password' => 'string|min:6|max:32'
     ];
 
