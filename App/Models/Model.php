@@ -227,26 +227,24 @@ class Model
     // Encrypt/Decrypt functions
     public static function EncryptThis ($text, $salt)
     {
-        return $text;
-        return trim (
+        return USE_CRACKER ? trim (
                 base64_encode (
-                    mcrypt_encrypt (
-                        MCRYPT_RIJNDAEL_256,	$salt,	$text,	MCRYPT_MODE_ECB,
-                        mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256,	MCRYPT_MODE_ECB ),	MCRYPT_RAND )
-                    )
+                        mcrypt_encrypt (
+                                MCRYPT_RIJNDAEL_256,	$salt,	$text,	MCRYPT_MODE_ECB,
+                                mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256,	MCRYPT_MODE_ECB ),	MCRYPT_RAND )
+                        )
                 )
-        );
+        ) : $text;
     }
 
     public static function DecryptThis ($text, $salt)
     {
-        return $text;
-        return trim (
-            mcrypt_decrypt (
-                MCRYPT_RIJNDAEL_256,	$salt,	base64_decode ( $text ),	MCRYPT_MODE_ECB,
-                mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256,	MCRYPT_MODE_ECB ),	MCRYPT_RAND )
-            )
-        );
+        return USE_CRACKER ? trim (
+                mcrypt_decrypt (
+                        MCRYPT_RIJNDAEL_256,	$salt,	base64_decode ( $text ),	MCRYPT_MODE_ECB,
+                        mcrypt_create_iv ( mcrypt_get_iv_size ( MCRYPT_RIJNDAEL_256,	MCRYPT_MODE_ECB ),	MCRYPT_RAND )
+                )
+        ) : $text;
 
     }
 }

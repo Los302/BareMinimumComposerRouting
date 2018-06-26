@@ -9,3 +9,4 @@ $PWs = [
 ];
 ?>
 <pre><?=print_r($PWs)?></pre>
+<?=$_SERVER['DOCUMENT_ROOT']?>
