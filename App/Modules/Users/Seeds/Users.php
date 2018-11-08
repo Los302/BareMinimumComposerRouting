@@ -1,5 +1,5 @@
 <?php
-include 'includes/initialize.php';
+include '../../../../includes/initialize.php';
 
 $seeder = new tebazil\dbseeder\Seeder($GLOBALS['DB'][0]);
 $generator = $seeder->getGeneratorConfigurator();
