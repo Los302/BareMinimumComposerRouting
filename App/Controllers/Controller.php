@@ -4,15 +4,31 @@
 use App\Services\Session;
 use App\Modules\Users\Models\User;
 use App\Services\View;
+use http\Env\Response;
 
 // Base Controller
+
+/**
+ * Class Controller
+ * @package App\Controllers
+ */
 class Controller
 {
-    public function __construct(Session $SESSION, $Function)
+    /**
+     * Controller constructor.
+     * @param Session $SESSION
+     * @param $Method
+     */
+    public function __construct(Session $SESSION, $Method)
     {
         $this->SESSION = $SESSION;
     }
 
+    /**
+     * This is the index page of the site
+     *
+     * @return Response
+     */
     public function index ()
     {
         // Set some page vars
@@ -22,6 +38,13 @@ class Controller
         View::Make('index', $Vars);
     }
 
+    /**
+     * This is a catch all page
+     *
+     * @param $Vars
+     *
+     * @return Response
+     */
     public function Page ($Vars)
     {
         $Page = false;

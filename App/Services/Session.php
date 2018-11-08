@@ -7,8 +7,6 @@ class Session
 {
     private $LoggedIn = false;
     public $UserID;
-    public $un;
-    public $Fuel;
     public $Role;
     private $message;
     private $messageType;
@@ -121,7 +119,6 @@ class Session
         unset ($this->UserID);
         $this->LoggedIn = false;
         $this->Role = '';
-        unset ($this->un);
         redirect_to ($Redirect?$Redirect:SITE_URL);
     }
 

@@ -1,18 +1,4 @@
 <?php
-function strip_zeros_from_date ($marked_string = '')
-{
-    // First remove the marked zeros
-    $no_zeros = str_replace ('*0', '', $marked_string);
-    // Then remove the remaining marks
-    $cleaned_string = str_replace ('*', '', $no_zeros);
-    return $cleaned_string;
-}
-function CheckForID ($ObjectName = '')
-{
-    $id = (int)$_GET['id'];
-    if (empty ($id) || !is_int($id)) { die('No '.$ObjectName.' id was provided'); }
-    return $id;
-}
 function redirect_to ($location = NULL)
 {
     if ($location != NULL)
@@ -34,7 +20,7 @@ function output_message ($message = '', $type = 'alert-danger')
 function Logit ($action, $message = '')
 {
     $logfile = 'log';
-    $new = file_exists ($logfile) ? flase : true;
+    $new = file_exists ($logfile) ? false : true;
     if ($handle = fopen ($logfile, 'a'))
     {
         $timestamp = strftime ("%Y-%m-%d %H:%M:%S", time ());

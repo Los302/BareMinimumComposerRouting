@@ -23,7 +23,7 @@
         <?php if (!$SESSION->IsLoggedIn()) { ?>
         <a href="<?=SITE_URL?>User">Login</a>
         <?php } else { ?>
-        <a href="<?=SITE_URL?>logout.php">Logout</a>
+        <a href="<?=SITE_URL?>User/Logout">Logout</a>
         <?php } ?>
     </div>
 </nav>

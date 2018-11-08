@@ -1,17 +1,74 @@
 <?php namespace App\Services;
 
+/**
+ * Class Validation
+ * @package App\Services
+ */
 class Validation
 {
+    /**
+     * This is the field we are validating for
+     *
+     * @var string
+     */
     private $key;
+
+    /**
+     * This is the $key with the words separated and capitalized
+     *
+     * @var string
+     */
+    private $SpacedKey;
+
+    /**
+     * This is the value give by the user which needs to be validated
+     *
+     * @var string
+     */
     private $value;
+
+    /**
+     * This is the type of value we are expecting
+     *
+     * @var string
+     */
     private $type = 'string';
+
+    /**
+     * These are the rules for the field which the value must follow
+     *
+     * @var array
+     */
     private $rules = [];
 
+    /**
+     * These are the custom error messages for the rules given by the developer
+     *
+     * @var array
+     */
     private static $Messages = [];
+
+    /**
+     * This is for duplicate checking
+     *
+     * @var int
+     */
     private static $ExceptID = 0;
 
+    /**
+     * This is the error if this field is invalid
+     *
+     * @var bool|string
+     */
     public $error = false;
 
+    /**
+     * Validation constructor.
+     *
+     * @param string $key This is the field we are validating for
+     * @param string $value This is the value given that we need to validate
+     * @param string $rules This is a list of rules separated by a pipe
+     */
     public function __construct ($key, $value, $rules)
     {
         $this->key = $key;
@@ -27,6 +84,14 @@ class Validation
         }
     }
 
+    /**
+     * @param array $input Values to be validated
+     * @param array $rules Rules that values must follow
+     * @param array $messages Custom error messages
+     * @param int $ExceptID This is used for duplicate checking
+     *
+     * @return array Errors
+     */
     public static function getErrors ($input, $rules, $messages = [], $ExceptID = 0)
     {
         self::$Messages = $messages;
@@ -40,6 +105,10 @@ class Validation
         return $errors;
     }
 
+    /**
+     * @param string $rule The rule being violated
+     * @param string $default The default error message if no custom error message
+     */
     private function SetError ($rule, $default)
     {
         $error = $default;
@@ -47,6 +116,13 @@ class Validation
         $this->error = $error;
     }
 
+    /**
+     * Cast the value to a string
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function string ($param)
     {
         $this->type = 'string';
@@ -54,6 +130,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Cast the value to an integer
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function int ($param)
     {
         $this->type = 'int';
@@ -61,6 +144,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Cast the value to a float
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function float ($param)
     {
         $this->type = 'float';
@@ -68,6 +158,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure this field has a value
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function required ($param)
     {
         $v = trim($this->value);
@@ -79,6 +176,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure this field has the syntax of an email address
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function email ($param)
     {
         if(!filter_var($this->value, FILTER_VALIDATE_EMAIL))
@@ -89,6 +193,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure this field has the syntax of a url
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function url ($param)
     {
         if(!filter_var($this->value, FILTER_VALIDATE_URL))
@@ -99,6 +210,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Minimum number value or date or string length
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function min ($param)
     {
         $v = $this->value;
@@ -131,6 +249,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Maximum number value or date or string length
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function max ($param)
     {
         $v = $this->value;
@@ -157,6 +282,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure the value is listed in the parameters
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function in ($param)
     {
         $list = ','.trim($param, ',').',';
@@ -168,6 +300,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure the value is a datetime
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function datetime ($param)
     {
         $time = strtotime($this->value);
@@ -179,6 +318,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure the value is a date
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function date ($param)
     {
         $this->type = 'date';
@@ -191,10 +337,17 @@ class Validation
         return true;
     }
 
+    /**
+     * Make sure the value is unique. The parameter must be in the form of class,method
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function unique ($param)
     {
-        list($Class, $Function) = explode(',', $param);
-        $Count = $Class::$Function($this->value, self::$ExceptID);
+        list($Class, $Method) = explode(',', $param);
+        $Count = $Class::$Method($this->value, self::$ExceptID);
         if ($Count)
         {
             $this->SetError('unique', 'The '.$this->SpacedKey.' field value is already in use and must be unique');
@@ -203,6 +356,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Match to fields so that user didn't mistype
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function confirmed ($param)
     {
         $key = $this->key.'_confirmed';
@@ -219,6 +379,13 @@ class Validation
         return true;
     }
 
+    /**
+     * Make this field required if another field meet certain criteria
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function requiredIf ($param)
     {
         list($OtherFieldName, $rule) = explode(',', $param);
@@ -242,13 +409,20 @@ class Validation
         return true;
     }
 
+    /**
+     * Custom validator function. The parameter must be in the form of class,method
+     *
+     * @param string $param Rule parameters
+     *
+     * @return bool
+     */
     private function custom ($param)
     {
-        list($Class, $Function) = explode(',', $param);
-        $Valid = $Class::$Function($this->value, self::$ExceptID);
+        list($Class, $Method) = explode(',', $param);
+        $Valid = $Class::$Method($this->value, self::$ExceptID);
         if (!$Valid)
         {
-            $this->SetError($Function, 'The '.$this->SpacedKey.' field value is invalid');
+            $this->SetError($Method, 'The '.$this->SpacedKey.' field value is invalid');
             return false;
         }
         return true;

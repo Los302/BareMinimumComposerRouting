@@ -4,16 +4,60 @@ use PDO;
 use PDOException;
 use App\Services\Validation;
 
+/**
+ * Class Model
+ * @package App\Models
+ */
 class Model
 {
+    /**
+     * @var int
+     */
     public static $searchCount;
 
+    /**
+     * This refers to $Los_DB in /includes/env.php. It is the key of the db you wish to use. It can be overridden in the
+     * child classes.
+     *
+     * @var int|string
+     */
     public static $DB = 0;
-    
+
+    /**
+     * This is the name of the auto increment column in the db table.
+     *
+     * @var string
+     */
     protected static $ID = 'id';
 
+    /**
+     * These are the validation rules. This should be overridden in the child classes. Refer to /App/Services/Validation.
+     *
+     * @var array
+     */
+    public $rules = [];
+
+    /**
+     * These are the error messages for the validation rules. This should be overridden in the child classes.
+     *
+     * @var array
+     */
+    public $messages = [];
+
+    /**
+     * This will be used if there are any errors while validating the user inputs.
+     *
+     * @var array
+     */
     public $errors = [];
 
+    /**
+     * Get all records in the table. This uses PDO.
+     *
+     * @param int $start
+     * @param int $limit
+     * @return array
+     */
     public static function find_all ($start = 0, $limit = 0)
     {
         $class = get_called_class();
@@ -22,6 +66,12 @@ class Model
         return self::find_by_sql($q, $Vs);
     }
 
+    /**
+     * Find the record by the auto increment id. This uses PDO.
+     *
+     * @param int $FindID
+     * @return bool|object
+     */
     public static function find_by_id ($FindID)
     {
         $class = get_called_class();
@@ -30,6 +80,14 @@ class Model
         return !empty ($r) ? array_shift ($r) : false;
     }
 
+    /**
+     * Find all records with the given query. This uses PDO.
+     *
+     * @param string $q PDO query
+     * @param array $Vs PDO values
+     * @param bool $Ordered Does the query request a specific order
+     * @return array Returns an array of objects
+     */
     public static function find_by_sql ($q, $Vs = [], $Ordered = false)
     {
         $class = get_called_class();
@@ -58,7 +116,8 @@ class Model
         $a = [];
         while ($o = $stmt->fetch(PDO::FETCH_CLASS))
         {
-            if ($Ordered) { $a[] = $o; }
+            if ($Ordered === true) { $a[] = $o; }
+            elseif ($Ordered)  { $a[$o->$Ordered] = $o; }
             else
             {
                 $ID = $class::$ID;
@@ -68,6 +127,11 @@ class Model
         return $a;
     }
 
+    /**
+     * Counts all records in the table.
+     *
+     * @return int
+     */
     public static function count_all ()
     {
         $class = get_called_class();
@@ -80,6 +144,13 @@ class Model
         return $class::$searchCount;
     }
 
+    /**
+     * Counts all records based on the given where clause. This uses PDO.
+     *
+     * @param $where WHERE clause without the WHERE keyword
+     * @param array $Vs PDO values
+     * @return int
+     */
     public static function count ($where, $Vs = [])
     {
         $class = get_called_class();
@@ -107,9 +178,14 @@ class Model
 //        return $r;
 //    }
 
+    /**
+     * If the property doesn't exist or if the property value is empty, don't include it.
+     *
+     * @return array
+     */
     protected function sanitized_attributes ()
     {
-        $clean_attributes = array ();
+        $clean_attributes = [];
         foreach ($this->Fields as $v)
         {
             if (!property_exists($this, $v)) { continue; }
@@ -120,6 +196,11 @@ class Model
         return $clean_attributes;
     }
 
+    /**
+     * Checks the auto increment value and runs create if empty and update otherwise.
+     *
+     * @return bool
+     */
     public function save ()
     {
         $class = get_called_class();
@@ -127,6 +208,11 @@ class Model
         return empty ($this->$ID) ? $this->create () : $this->update ();
     }
 
+    /**
+     * Inserts the record into the db table.
+     *
+     * @return bool
+     */
     public function create ()
     {
         $class = get_called_class();
@@ -153,6 +239,11 @@ class Model
         return $AffectedRows == 1 ? true : false;
     }
 
+    /**
+     * Updates the record in the db table.
+     *
+     * @return bool
+     */
     public function update ()
     {
         $class = get_called_class();
@@ -179,6 +270,11 @@ class Model
         return $AffectedRows == 1 ? true : false;
     }
 
+    /**
+     * Deletes the record from the db table.
+     *
+     * @return mixed
+     */
     public function delete ()
     {
         $class = get_called_class();
@@ -189,13 +285,12 @@ class Model
         return $db->exec($q);
     }
 
-    public function ToScreen ($var)
-    {
-        $var = htmlspecialchars($this->$var);
-        $var = stripslashes($var);
-        return $var;
-    }
-
+    /**
+     * Validates the user inputs in the child class.
+     *
+     * @param int $ExceptKey
+     * @return array
+     */
     public function validate ($ExceptKey = 0)
     {
         $class = get_called_class();
@@ -210,6 +305,9 @@ class Model
         return array_merge($this->errors, Validation::getErrors ($input, $this->rules, $Messages, $ExceptKey));
     }
 
+    /**
+     * Truncates the db table of the child class.
+     */
     public static function TruncateTable ()
     {
         $class = get_called_class();
@@ -219,12 +317,26 @@ class Model
         $db->query($q);
     }
 
+    /**
+     * Gets the PDO of the desired db.
+     *
+     * @param $Class
+     * @return object PDO
+     */
     public static function GetThePDO ($Class)
     {
         return $GLOBALS['DB'][$Class::$DB];
     }
 
     // Encrypt/Decrypt functions
+
+    /**
+     * Encrypts the given text string with the given salt. The salt us usually found in /includes/env.php.
+     *
+     * @param $text
+     * @param $salt
+     * @return string
+     */
     public static function EncryptThis ($text, $salt)
     {
         return USE_CRACKER ? trim (
@@ -237,6 +349,13 @@ class Model
         ) : $text;
     }
 
+    /**
+     * Decrypts the given encrypted text string using the given salt. The salt us usually found in /includes/env.php.
+     *
+     * @param $text
+     * @param $salt
+     * @return string
+     */
     public static function DecryptThis ($text, $salt)
     {
         return USE_CRACKER ? trim (
