@@ -4,4 +4,4 @@
 error_log
 migrations.yml
 composer.lock
-AutoDeployPostHook.php
+AutoDeployPostHook.sh
