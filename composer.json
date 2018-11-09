@@ -9,10 +9,10 @@
             "eftec\\": "vendor/eftec/"
         }
     },
-    "require": {
-        "doctrine/migrations": "^1.5",
-        "nikic/fast-route": "^1.2",
-        "eftec/bladeone": "^1.9",
-        "tebazil/db-seeder": "^0.0.0"
-    }
+	"require": {
+		"doctrine/migrations": "^1.8",
+		"nikic/fast-route": "^1.3",
+		"eftec/bladeone": "^3.17",
+		"tebazil/db-seeder": "^0.0.0"
+	}
 }
