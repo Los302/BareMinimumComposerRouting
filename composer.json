@@ -13,6 +13,7 @@
 		"doctrine/migrations": "^1.8",
 		"nikic/fast-route": "^1.3",
 		"eftec/bladeone": "^3.17",
-		"tebazil/db-seeder": "^0.0.0"
+		"tebazil/db-seeder": "^0.0.0",
+		"symfony/yaml": "^4.1"
 	}
 }
