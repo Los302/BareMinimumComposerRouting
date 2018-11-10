@@ -89,15 +89,20 @@ class User extends Model
         return $Return;
     }
 
-    public static function Authenticate ($un, $pw, $role)
+    public static function Authenticate ($un, $pw, $role = '')
     {
         $pw = self::EncryptThis ($pw, KEY2);
         $q = 'SELECT * FROM '.self::$TableName.'
 							WHERE username = :un
 							AND `password` = :pw
-							AND role LIKE :role
 							AND active > 0';
-        $r = self::find_by_sql ($q, [':un' => $un, ':pw' => $pw, ':role' => '%|'.$role.'|%']);//die('<pre>'.print_r($q, true).'</pre>');
+        $Vs = [':un' => $un, ':pw' => $pw];
+        if ($role)
+        {
+            $q .= ' AND role LIKE :role';
+            $Vs [':role'] = '%|'.$role.'|%';
+        }
+        $r = self::find_by_sql ($q, $Vs);//die('<pre>'.print_r($q, true).'</pre>');
 
         $Return = false;
         if (!empty ($r))

@@ -5,6 +5,7 @@ use App\Controllers\Controller;
 use App\Services\Session;
 use App\Modules\Users\Models\User;
 use App\Services\View;
+use Couchbase\UserSettings;
 
 // User Controller
 class Users extends Controller
@@ -36,11 +37,12 @@ class Users extends Controller
         if (isset ($_POST['uname']))
         {
             // Authenticate the user
-            $user = User::Authenticate($_POST['uname'], $_POST['pword'], 'USER');
+            $user = User::Authenticate($_POST['uname'], $_POST['pword']);
             if ($user)
             {
                 $SESSION->LogIn($user);
-                redirect_to(USERS_URL);
+                $Redirect = $SESSION->IsAuthorized('ADMIN') ? ADMIN_URL : USERS_URL;
+                redirect_to($Redirect);
                 $status = 'Success';
             }
             else
