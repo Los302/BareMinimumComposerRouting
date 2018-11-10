@@ -1,5 +1,5 @@
 <?php
-include '../../../../includes/initialize.php';
+include dirname(dirname(dirname(dirname(__DIR__)))).'/includes/initialize.php';
 
 $seeder = new tebazil\dbseeder\Seeder($GLOBALS['DB'][0]);
 $generator = $seeder->getGeneratorConfigurator();
@@ -10,8 +10,16 @@ $UsersVals = [
         'id' => 1,
         'username' => 'Admin',
         'password' => 'Admin',
-        'email' => 'Carlos@LosPrograms.com',
-        'role' => '|ADMIN|USER|',
+        'email' => 'Someone@LosPrograms.com',
+        'role' => '|ADMIN|',
+        'active' => 1
+    ],
+    [
+        'id' => 2,
+        'username' => 'User',
+        'password' => 'User',
+        'email' => 'Someone@LosPrograms.com',
+        'role' => '|USER|',
         'active' => 1
     ]
 ];

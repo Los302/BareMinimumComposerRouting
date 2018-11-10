@@ -13,7 +13,7 @@ class Users extends Controller
     {
         // Check for authentication
         $Allowed = ['Login', 'ForgotPassword'];
-        if (!in_array($Method, $Allowed)) { $SESSION->CheckAuthorization('|USER|', '/User/Login'); }
+        if (!in_array($Method, $Allowed)) { $SESSION->CheckAuthorization('USER', '/User/Login'); }
 
         // Set some vars
         $this->SESSION = $SESSION;
@@ -23,7 +23,7 @@ class Users extends Controller
     public function index ()
     {
         // Show the page
-        View::Make('index');
+        View::Make('Users.index');
     }
 
     public function Login ()
