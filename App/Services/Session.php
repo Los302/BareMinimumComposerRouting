@@ -3,19 +3,71 @@
 use App\Models\Model;
 use App\Modules\Users\Models\User;
 
+/**
+ * Class Session
+ * @package App\Services
+ */
 class Session
 {
+    /**
+     * Whether or not the user is logged in
+     *
+     * @var bool
+     */
     private $LoggedIn = false;
+
+    /**
+     * The logged in user's id
+     *
+     * @var int
+     */
     public $UserID;
+
+    /**
+     * The logged in user's role
+     *
+     * @var int|string
+     */
     public $Role;
+
+    /**
+     * The message to the user usually a success message after a form submit
+     *
+     * @var string
+     */
     private $message;
+
+    /**
+     * This is the type of message
+     *
+     * @var string success|danger|warning|info
+     */
     private $messageType;
 
+    /**
+     * The id column of the user table
+     *
+     * @var string
+     */
     private $userId = 'id';
+
+    /**
+     * The role column of the user table
+     *
+     * @var string
+     */
     private $userRole = 'role';
 
+    /**
+     * The current session
+     *
+     * @var object Session
+     */
     private static $SESSION;
 
+    /**
+     * Session constructor.
+     */
     public function __construct ()
     {
         session_start ();
@@ -23,12 +75,20 @@ class Session
         $this->CheckLogin ();
     }
 
+    /**
+     * Get the current session if there is one on create a new one if not
+     *
+     * @return Session
+     */
     public static function GetTheSession ()
     {
         if (!self::$SESSION) { self::$SESSION = new self; }
         return self::$SESSION;
     }
 
+    /**
+     * Checks if the user is supposed to be logged in and logs them in if they are
+     */
     public function CheckLogin ()
     {
         if (isset ($_SESSION['UserID']))
@@ -60,6 +120,9 @@ class Session
         }
     }
 
+    /**
+     * Checks for a message and grabs it if it's there and deletes the $_SESSION[message] var
+     */
     private function CheckMessage ()
     {
         if (isset ($_SESSION['message']))
@@ -73,16 +136,34 @@ class Session
         }
     }
 
+    /**
+     * Checks if the user is logged in
+     *
+     * @return bool
+     */
     public function IsLoggedIn ()
     {
         return $this->LoggedIn;
     }
 
+    /**
+     * Checks if the user is authorized based on being logged in and their role
+     *
+     * @param string $role
+     *
+     * @return bool
+     */
     public function IsAuthorized ($role)
     {
         return $this->LoggedIn && strpos ($this->Role, '|'.$role.'|') !== false;
     }
 
+    /**
+     * Redirect the user to another page if unauthorized
+     *
+     * @param array $role
+     * @param string $url
+     */
     public function CheckAuthorization ($role, $url)
     {
         if (is_array($role))
@@ -94,6 +175,12 @@ class Session
         else { if (!$this->IsAuthorized($role)) { redirect_to($url); } }
     }
 
+    /**
+     * Logs the user in
+     *
+     * @param object $user
+     * @param bool $remember
+     */
     public function LogIn ($user, $remember = false)
     {
         $id = $this->userId;
@@ -107,6 +194,11 @@ class Session
         setcookie ( 'UserID', $encrypted_id, $time, '/' );
     }
 
+    /**
+     * Logs the user out and redirects the user
+     *
+     * @param string $Redirect url
+     */
     public function LogOut ($Redirect = '')
     {
         unset ($_SESSION['UserID']);
@@ -122,6 +214,14 @@ class Session
         redirect_to ($Redirect?$Redirect:SITE_URL);
     }
 
+    /**
+     * Gets or sets the message
+     *
+     * @param string $msg
+     * @param string $type
+     *
+     * @return mixed
+     */
     public function message ($msg = '', $type = '')
     {
         if (!empty ($msg))
@@ -136,6 +236,13 @@ class Session
         }
     }
 
+    /**
+     * Gets or sets the message type
+     *
+     * @param string $type
+     *
+     * @return mixed
+     */
     public function messageType ($type = '')
     {
         if (!empty($type)) { $_SESSION['messageType'] = $type; }

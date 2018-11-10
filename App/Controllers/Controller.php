@@ -4,7 +4,6 @@
 use App\Services\Session;
 use App\Modules\Users\Models\User;
 use App\Services\View;
-use http\Env\Response;
 
 // Base Controller
 
@@ -26,8 +25,6 @@ class Controller
 
     /**
      * This is the index page of the site
-     *
-     * @return Response
      */
     public function index ()
     {
@@ -43,14 +40,14 @@ class Controller
      *
      * @param $Vars
      *
-     * @return Response
+     * @throws \Exception
      */
     public function Page ($Vars)
     {
         $Page = false;
 
         if (!$Page) { View::Make('NotFound'); }
-        die('<pre>'.print_r($Vars, true).'</pre>');
+        echo ('<pre>'.print_r($Vars, true).'</pre>');
     }
 }
 ?>
