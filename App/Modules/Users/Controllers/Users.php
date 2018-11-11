@@ -5,15 +5,24 @@ use App\Controllers\Controller;
 use App\Services\Session;
 use App\Modules\Users\Models\User;
 use App\Services\View;
-use Couchbase\UserSettings;
 
 // User Controller
+
+/**
+ * Class Users
+ * @package App\Modules\Users\Controllers
+ */
 class Users extends Controller
 {
+    /**
+     * Users constructor.
+     * @param Session $SESSION
+     * @param string $Method
+     */
     public function __construct(Session $SESSION, $Method)
     {
         // Check for authentication
-        $Allowed = ['Login', 'ForgotPassword'];
+        $Allowed = ['Login', 'ForgotPassword', 'Logout'];
         if (!in_array($Method, $Allowed)) { $SESSION->CheckAuthorization('USER', '/User/Login'); }
 
         // Set some vars
@@ -21,12 +30,22 @@ class Users extends Controller
         View::$ModuleViews = 'Modules.Users.Views.';
     }
 
+    /**
+     * Show is the User home page
+     *
+     * @throws \Exception
+     */
     public function index ()
     {
         // Show the page
         View::Make('Users.index');
     }
 
+    /**
+     * Attempt to log the user in or show the login page
+     *
+     * @throws \Exception
+     */
     public function Login ()
     {
         $SESSION = $this->SESSION;
@@ -42,7 +61,7 @@ class Users extends Controller
             {
                 $SESSION->LogIn($user);
                 $Redirect = $SESSION->IsAuthorized('ADMIN') ? ADMIN_URL : USERS_URL;
-                redirect_to($Redirect);
+                Redirect($Redirect);
                 $status = 'Success';
             }
             else
@@ -61,6 +80,11 @@ class Users extends Controller
         View::Make('login', $Vars);
     }
 
+    /**
+     * Show the forgot password page and/or email the pw to the user
+     *
+     * @throws \Exception
+     */
     public function ForgotPassword ()
     {
         $SESSION = $this->SESSION;
@@ -76,7 +100,7 @@ class Users extends Controller
             {
                 $user->EmailPassword();
                 $SESSION->message('The password has been sent to the email address associated with that username.', 'alert-success');
-                redirect_to(USERS_URL.'Login');
+                Redirect(USERS_URL.'Login');
                 $status = 'Success';
             }
             else
@@ -95,6 +119,9 @@ class Users extends Controller
         View::Make('ForgotPassword', $Vars);
     }
 
+    /**
+     * Log the user out and redirect the user
+     */
     public function Logout ()
     {
         $SESSION = $this->SESSION;

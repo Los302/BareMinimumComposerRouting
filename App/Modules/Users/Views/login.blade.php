@@ -13,7 +13,7 @@
                         <h4 class="modal-title">Login</h4>
                     </div>
                     <div class="modal-body">
-                        <?=output_message($SESSION->message(), $SESSION->messageType())?>
+                        <?=ShowMessage($SESSION->message(), $SESSION->messageType())?>
                         <div class="form-group">
                             <label for="uname" class="control-label">Username:</label>
                             <input type="text" class="form-control" id="uname" name="uname" value="{{$UName}}" />

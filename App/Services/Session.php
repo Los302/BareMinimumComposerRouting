@@ -161,7 +161,7 @@ class Session
     /**
      * Redirect the user to another page if unauthorized
      *
-     * @param array $role
+     * @param array|string $role
      * @param string $url
      */
     public function CheckAuthorization ($role, $url)
@@ -170,9 +170,9 @@ class Session
         {
             $Authorized = false;
             foreach ($role as $v) { if ($this->IsAuthorized($v)) { $Authorized = true; } }
-            if (!$Authorized) { redirect_to($url); }
+            if (!$Authorized) { Redirect($url); }
         }
-        else { if (!$this->IsAuthorized($role)) { redirect_to($url); } }
+        else { if (!$this->IsAuthorized($role)) { Redirect($url); } }
     }
 
     /**
@@ -211,7 +211,7 @@ class Session
         unset ($this->UserID);
         $this->LoggedIn = false;
         $this->Role = '';
-        redirect_to ($Redirect?$Redirect:SITE_URL);
+        Redirect ($Redirect?$Redirect:SITE_URL);
     }
 
     /**

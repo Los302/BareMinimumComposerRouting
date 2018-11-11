@@ -7,8 +7,18 @@ use App\Modules\Users\Models\User;
 use App\Services\View;
 
 // Admin Controller
+
+/**
+ * Class Admin
+ * @package App\Modules\Users\Controllers
+ */
 class Admin extends Controller
 {
+    /**
+     * Admin constructor.
+     * @param Session $SESSION
+     * @param string $Method
+     */
     public function __construct(Session $SESSION, $Method)
     {
         // Check for authentication
@@ -21,12 +31,22 @@ class Admin extends Controller
         View::$ModuleViews = 'Modules.Users.Views.Admin.';
     }
 
+    /**
+     * Show is the Admin home page
+     *
+     * @throws \Exception
+     */
     public function index ()
     {
         // Show the page
         View::Make('index');
     }
 
+    /**
+     * Attempt to log the user in or show the login page
+     *
+     * @throws \Exception
+     */
     public function Login ()
     {
         $SESSION = $this->SESSION;
@@ -41,7 +61,7 @@ class Admin extends Controller
             if ($user)
             {
                 $SESSION->LogIn($user);
-                redirect_to(ADMIN_URL);
+                Redirect(ADMIN_URL);
                 $status = 'Success';
             }
             else
@@ -60,6 +80,11 @@ class Admin extends Controller
         View::Make('login', $Vars);
     }
 
+    /**
+     * Show the forgot password page and/or email the pw to the user
+     *
+     * @throws \Exception
+     */
     public function ForgotPassword ()
     {
         $SESSION = $this->SESSION;
@@ -75,7 +100,7 @@ class Admin extends Controller
             {
                 $user->EmailPassword();
                 $SESSION->message('The password has been sent to the email address associated with that username.', 'alert-success');
-                redirect_to(ADMIN_URL.'Login');
+                Redirect(ADMIN_URL.'Login');
                 $status = 'Success';
             }
             else
@@ -94,6 +119,9 @@ class Admin extends Controller
         View::Make('ForgotPassword', $Vars);
     }
 
+    /**
+     * Log the user out and redirect the user
+     */
     public function Logout ()
     {
         $SESSION = $this->SESSION;

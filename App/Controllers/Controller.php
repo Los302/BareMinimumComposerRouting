@@ -14,9 +14,16 @@ use App\Services\View;
 class Controller
 {
     /**
+     * The current session
+     *
+     * @var Session
+     */
+    public $SESSION;
+
+    /**
      * Controller constructor.
      * @param Session $SESSION
-     * @param $Method
+     * @param string $Method
      */
     public function __construct(Session $SESSION, $Method)
     {
@@ -38,7 +45,7 @@ class Controller
     /**
      * This is a catch all page
      *
-     * @param $Vars
+     * @param array $Vars
      *
      * @throws \Exception
      */

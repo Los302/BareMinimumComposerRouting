@@ -1,11 +1,13 @@
 <?php
 require_once ('env.php');
 
+// Set the timezone
+date_default_timezone_set(TIMEZONE);
+
 // Directories
 define ('ADMIN_URL', SITE_URL.'Admin/');
 define ('USERS_URL', SITE_URL.'User/');
 define ('IMAGE_URL', SITE_URL.'public/images/');
-define ('IMAGE_PATH', SITE_ROOT.'public/images/');
 define ('CSS_URL', SITE_URL.'public/_CSS/');
 define ('JS_URL', SITE_URL.'public/_JS/');
 

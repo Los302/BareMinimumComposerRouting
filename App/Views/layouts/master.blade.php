@@ -20,11 +20,11 @@
 <nav>
     <div class="container">
         <a href="<?=SITE_URL?>">Home</a> |
-        <?php if (!$SESSION->IsLoggedIn()) { ?>
+        @if (!$SESSION->IsLoggedIn())
         <a href="<?=SITE_URL?>User">Login</a>
-        <?php } else { ?>
+        @else
         <a href="<?=SITE_URL?>User/Logout">Logout</a>
-        <?php } ?>
+        @endif
     </div>
 </nav>
 <section class="container">

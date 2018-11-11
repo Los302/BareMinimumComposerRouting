@@ -1,70 +1,75 @@
 <?php
-function redirect_to ($location = NULL)
+use App\Services\View;
+
+/**
+ * Redirects the user to the specified $Location
+ *
+ * @param string $Location url or even partial url
+ */
+function Redirect ($Location = '')
 {
-    if ($location != NULL)
+    if ($Location)
     {
-        header ('Location: ' . $location);
+        header ('Location: ' . $Location);
         exit;
     }
 }
 
-function output_message ($message = '', $type = 'alert-danger')
+/**
+ * Shows the given message in a nice looking div
+ *
+ * @param string $message
+ * @param string $type
+ *
+ * @return string
+ *
+ * @throws Exception
+ */
+function ShowMessage ($message = '', $type = 'alert-danger')
 {
     if (!empty ($message))
     {
         $message = is_array($message) ? implode('<br />', $message) : $message;
-        return '<div class="alert '.$type.'">'.$message.'</div>';
+        View::$ModuleViews = false;
+        return View::GetHTML('partials.Message', compact('message', 'type'));
     }
+
+    return '';
 }
 
-function Logit ($action, $message = '')
+/**
+ * Formats any given date into the given $Format
+ *
+ * @param string $Format
+ * @param string $strDate
+ *
+ * @return string
+ */
+function FormatDate ($Format, $strDate = 'now')
 {
-    $logfile = 'log';
-    $new = file_exists ($logfile) ? false : true;
-    if ($handle = fopen ($logfile, 'a'))
-    {
-        $timestamp = strftime ("%Y-%m-%d %H:%M:%S", time ());
-        $content = $timestamp.' | '.$action.': '.$message."\r\n";
-        fwrite ($handle, $content);
-        fclose ($handle);
-        if ($new) { chmod ($logfile, 0755); }
-    }
-    else
-    {
-        //"Could not open log file for writing.";
-    }
+    $Date = new DateTime($strDate);
+    return $Date->format($Format);
 }
 
-function datetime2text ($datetime)
+/**
+ * Replaces \r\n with <br>
+ *
+ * @param string $info
+ *
+ * @return string
+ */
+function Paragraphs ($info)
 {
-    $unixdatetime = strtotime ($datetime);
-    return strftime ("%B %d, %Y at %I:%M %p", $unixdatetime);
+    return str_replace("\r\n", '<br>', $info);
 }
 
-function text2mysqldate ($text)
-{
-    $date = explode ('/', $text);
-    $mysqldate = $date[2].'-'.$date[0].'-'.$date[1];
-    return $mysqldate;
-}
-
-function mysqldate2text ($date)
-{
-    $time = strtotime($date);
-    return date ('n/j/Y', $time);
-}
-
-function mysqldatetime2text ($date)
-{
-    $time = strtotime($date);
-    return date ('n/j/Y h:i a', $time);
-}
-
-function paragraphs ($info)
-{
-    return str_replace("\r\n", '<br />', $info);
-}
-
+/**
+ * Removes all script tags from the string
+ *
+ * @param string $string
+ *
+ * @return string
+ */
 function NoScript ($string)
 {
     $string = str_replace('<script', '', trim($string));
@@ -72,6 +77,13 @@ function NoScript ($string)
     return $string;
 }
 
+/**
+ * Removes all quotes and script tags from the string
+ *
+ * @param string $string
+ *
+ * @return string
+ */
 function NoScript_NoQuotes ($string)
 {
     $string = str_replace("'", '', str_replace('"', '', trim($string)));
@@ -79,45 +91,40 @@ function NoScript_NoQuotes ($string)
     return $string;
 }
 
+/**
+ * Rounds the number to the hundreths and places a cash symbol in front of it
+ *
+ * @param float $float
+ *
+ * @return string
+ */
 function MoneyFormat ($float)
 {
     return "$".number_format($float, 2);
 }
 
+/**
+ * Removes the cash symbol and commas and casts it to a double
+ *
+ * @param string $cash
+ *
+ * @return double
+ */
 function CashToDouble ($cash)
 {
     $cash = str_replace('$', '', str_replace(',', '', $cash));
     return (double)$cash;
 }
 
-function Page($page)
-{
-    return strchr($_SERVER["SCRIPT_NAME"], '/'.$page.'.php');
-}
-
-function CurrentLink($link)
-{
-    if (Page($link))
-    {
-        return ' class="first"';
+/*set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) {
+    // error was suppressed with the @-operator
+    if (0 === error_reporting()) {
+        return false;
     }
-    elseif ($link == 'Home' && $_SERVER["SCRIPT_NAME"] == '/index.php')
-    {
-        return ' class="first"';
-    }
-}
-
-//set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) {
-//    // error was suppressed with the @-operator
-//    if (0 === error_reporting()) {
-//        return false;
-//    }
-//echo $errno.'<br>';
-//echo $errstr.'<br>';
-//echo $errfile.'<br>';
-//echo $errline.'<br>';
-//echo '<pre>'.print_r($errcontext, true).'</pre>';
-//    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-//});
-
-?>
+echo $errno.'<br>';
+echo $errstr.'<br>';
+echo $errfile.'<br>';
+echo $errline.'<br>';
+echo '<pre>'.print_r($errcontext, true).'</pre>';
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});*/
