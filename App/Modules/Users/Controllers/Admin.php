@@ -2,9 +2,9 @@
 
 // Include the necessary classes
 use App\Controllers\Controller;
-use App\Services\Session;
+use App\Helpers\Session;
 use App\Modules\Users\Models\User;
-use App\Services\View;
+use App\Helpers\View;
 
 // Admin Controller
 

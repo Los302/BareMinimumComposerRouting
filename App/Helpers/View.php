@@ -1,8 +1,8 @@
-<?php namespace App\Services;
+<?php namespace App\Helpers;
 
 // Include the necessary classes
 use eftec\bladeone;
-use App\Services\Session;
+use App\Helpers\Session;
 
 /**
  * Class View

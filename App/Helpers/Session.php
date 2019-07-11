@@ -1,4 +1,4 @@
-<?php namespace App\Services;
+<?php namespace App\Helpers;
 
 use App\Models\Model;
 use App\Modules\Users\Models\User;

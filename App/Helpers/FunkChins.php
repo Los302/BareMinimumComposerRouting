@@ -1,5 +1,5 @@
 <?php
-use App\Services\View;
+use App\Helpers\View;
 
 /**
  * Redirects the user to the specified $Location

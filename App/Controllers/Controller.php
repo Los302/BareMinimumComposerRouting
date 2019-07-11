@@ -1,9 +1,9 @@
 <?php namespace App\Controllers;
 
 // Include the necessary classes
-use App\Services\Session;
+use App\Helpers\Session;
 use App\Modules\Users\Models\User;
-use App\Services\View;
+use App\Helpers\View;
 
 // Base Controller
 

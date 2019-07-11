@@ -2,7 +2,7 @@
 
 use PDO;
 use PDOException;
-use App\Services\Validation;
+use App\Helpers\Validation;
 
 /**
  * Class Model
